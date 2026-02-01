@@ -1,10 +1,10 @@
 import React from 'react'
-import AdminDashboard from './controllers/AdminDashboard';
+import Home from './Pages/Home';
 
 const App = () => {
   return (
     <div>
-      <AdminDashboard />
+      <Home />
     </div>
   )
 }
