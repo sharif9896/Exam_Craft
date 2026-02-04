@@ -6,10 +6,12 @@ import { BACKEND_URL } from '../utils/utils';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Cookies from "js-cookies"
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const navigate = useNavigate();
 
 
     const handleSubmit = async (e) => {
@@ -23,12 +25,12 @@ const LoginPage = () => {
           },
         );
         toast.success(data.message);
-        Cookies.set("token", data.token, {
+        Cookies.setItem("token", data.token, {
                 expires: 15,
                 secure: false,
                 path: "/",
             });
-        navigate("/dashboard");
+        navigate("/admin/dashboard");
       } catch (e) {
         toast.error(e.response.data.message);
         console.log(e);
@@ -61,7 +63,7 @@ const LoginPage = () => {
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
               <input 
                 type="email" 
-                onChange={(e) => {setemail(e.target.value)}}
+                onChange={(e) => setemail(e.target.value)}
                 value={email}
                 className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-transparent transition-all outline-none"
                 placeholder="email"
@@ -79,7 +81,7 @@ const LoginPage = () => {
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
               <input 
                 type="password" 
-                onChange={(e) => {setpassword(e.target.value)}}
+                onChange={(e) => setpassword(e.target.value)}
                 value={password}
                 className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-transparent transition-all outline-none"
                 placeholder="••••••••"

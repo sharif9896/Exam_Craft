@@ -1,10 +1,10 @@
 import express from 'express';
-import { addepartment, deleteDepartment, getDepartments, searchByDepartName, updateDepartment } from '../controllers/DepartmentController.js';
 import adminMiddleware from '../middlewares/adminMiddleware.js';
+import {addepartment, getDepartments, updateDepartment, deleteDepartment, searchByDepartName} from '../controllers/DepartmentController.js';
 
 const departmentRouter = express.Router();
 
-departmentRouter.post('/adddepartment', adminMiddleware, addepartment);
+departmentRouter.post('/addepartment', adminMiddleware, addepartment);
 departmentRouter.get('/getdepartments', adminMiddleware, getDepartments);
 departmentRouter.put('/updatedepartment/:id', adminMiddleware, updateDepartment);
 departmentRouter.delete('/deletedepartment/:id', adminMiddleware, deleteDepartment);

@@ -10,8 +10,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Cookies from 'js-cookies'
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import AddAllowed from '../components/AddAllowed';
 
-const AdminDashboard = () => {
+const AdminAllowed = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState({});
   const [isProfileOpen, setProfileOpen] = useState(false);
@@ -249,9 +250,9 @@ const AdminDashboard = () => {
         <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50">
           <div className="max-w-7xl mx-auto">
              {/* This is where your Routes (Outlet) would render */}
-             <div className="bg-white border-2 border-dashed border-slate-200 rounded-3xl h-96 flex items-center justify-center text-slate-400">
-                Route Content for: {location.pathname}
-             </div>
+             {/* <div className="bg-white border-2 border-dashed border-slate-200 rounded-3xl h-96 flex items-center justify-center text-slate-400"> */}
+                <AddAllowed />
+             {/* </div> */}
           </div>
         </main>
       </div>
@@ -259,6 +260,6 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default AdminAllowed;
 
 

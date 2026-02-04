@@ -1,4 +1,4 @@
-import TryCatch from "../middlewares/TryCatch";
+import TryCatch from "../middlewares/TryCatch.js";
 import Department from "../models/departments.js";
 
 const addepartment = TryCatch(async (req, res) => {
