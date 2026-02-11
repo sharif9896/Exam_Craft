@@ -48,8 +48,9 @@ const login = async (req, res) => {
 }
 
 const userprofile = async (req,res) => {
+    const {adminId} = req;
     try{
-        const response = await User.find({});
+        const response = await User.find({_id: adminId});
         if(!response){
             res.status(400).josn({message: "No users found"});
         }
@@ -60,12 +61,13 @@ const userprofile = async (req,res) => {
     }
 }
 const userprofilebyId = async (req,res) => {
-    const { id } = req.params;
-    if(!id){
+    const { adminid } = req;
+    // console.log(adminid);
+    if(!adminid){
         return res.status(400).json({message: "User ID is required"});
     }
     try{
-        const response = await User.findById(id);
+        const response = await User.findById({_id: adminid});
         if(!response){
             return res.status(404).json({message: "User not found"});
         }

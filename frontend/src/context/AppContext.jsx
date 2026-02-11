@@ -21,6 +21,31 @@ export const AppProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]); 
     const [ staffs, setStaffs ] = useState([]);
+    const [classes, setclasses] = useState([]);
+
+    async function fetchadmin(){
+        try{
+            const token = Cookies.getItem("token");
+            if (!token) {
+                setloading1(false);
+                return;
+            }
+            const {data} = await axios.get(`${BACKEND_URL}/api/user/fetchUser`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            // console.log(data, "User");
+            setUser(data.user);
+            setIsAuth(true);
+        }catch(e){
+            console.log(e);
+        } finally {
+            setloading1(false);
+        }
+    }
+
 
     async function fetchDepartments() {
         try {
@@ -32,6 +57,7 @@ export const AppProvider = ({ children }) => {
             const { data } = await axios.get(`${BACKEND_URL}/api/departments/getdepartments`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
+            console.log(data.data);
             setdepartment(data.data);
             setIsAuth(true);
         } catch (e) {
@@ -40,6 +66,27 @@ export const AppProvider = ({ children }) => {
             setloading1(false);
         }
     }
+
+        async function fetchClasses() {
+        try {
+            const token = Cookies.getItem("token");
+            if (!token) {
+                setloading1(false);
+                return;
+            }
+            const { data } = await axios.get(`${BACKEND_URL}/api/classes/getclasses`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            console.log(data, "Classes");
+            setclasses(data.data);
+            setIsAuth(true);
+        } catch (e) {
+            console.error("Fetch user error:", e);
+        } finally {
+            setloading1(false);
+        }
+    }
+
 
     async function fetchStaffs() {
         try {
@@ -84,7 +131,9 @@ export const AppProvider = ({ children }) => {
     useEffect(() => {
         fetchDepartments();
         fetchStaffs();
-    }, []);
+        fetchadmin();
+        fetchClasses();
+}, []);
 
    
     const contextValue = {
@@ -92,6 +141,10 @@ export const AppProvider = ({ children }) => {
         setdepartment,
         staffs,
         setStaffs,
+        user,
+        setUser,
+        classes,
+        setclasses
     };
 
     return (

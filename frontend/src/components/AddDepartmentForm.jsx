@@ -4,13 +4,17 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { BACKEND_URL } from '../utils/utils';
 import { toast } from 'react-toastify';
+import { useAppContext } from '../context/AppContext';
 
 const AddDepartmentForm = ({token}) => {
+
+  const {user} = useAppContext();
   const [formData, setFormData] = useState({
     academicYear: '',
     departmentName: '',
     departmentCode: '',
-    description: ''
+    description: '',
+    creatorId: user._id,
   });
 
   const handleChange = (e) => {

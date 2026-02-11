@@ -7,17 +7,17 @@ import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
 import { BACKEND_URL } from '../utils/utils';
 import axios from 'axios';
-import { toast } from 'react-toastify'; // Ensure this is installed/imported
+import { toast } from 'react-toastify';
 
 const AddClasses = ({ token }) => {
+  const { user, department } = useAppContext();
+
   const [formData, setFormData] = useState({
     className: '',
-    classCode: '', // Changed from ClassCode to classCode (lowercase)
+    classCode: '',
     description: '',
     departmentId: ''
   });
-
-  const { department } = useAppContext();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,31 +25,30 @@ const AddClasses = ({ token }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Saving Class Data:", formData);
 
     try {
       const { data } = await axios.post(`${BACKEND_URL}/api/classes/addclass`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}` // This is where req.adminId comes from!
         }
       });
 
       toast.success(data.message || "Class added!");
       
-      // Reset form after successful save
+      // Clear the form fields but keep the structure
       setFormData({
         className: '',
         classCode: '',
         description: '',
-        departmentId: ''
+        departmentId: '',
+        creatorId: user._id // Keep this for consistency if needed
       });
       
     } catch (error) {
-      console.error("Submission error:", error);
       const errorMsg = error.response?.data?.message || "Internal Server Error";
       toast.error(errorMsg);
     }
-  };
+};
 
   return (
     <motion.div 
@@ -71,7 +70,6 @@ const AddClasses = ({ token }) => {
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           
-          {/* Class Name */}
           <div className="flex flex-col gap-2.5">
             <label className="text-[13px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
               <BookOpen size={14} className="text-indigo-400" />
@@ -84,11 +82,10 @@ const AddClasses = ({ token }) => {
               required
               value={formData.className}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-slate-50/30 placeholder:text-slate-400"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-slate-50/30"
             />
           </div>
 
-          {/* Class Code */}
           <div className="flex flex-col gap-2.5">
             <label className="text-[13px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
               <Hash size={14} className="text-indigo-400" />
@@ -96,16 +93,15 @@ const AddClasses = ({ token }) => {
             </label>
             <input
               type="text"
-              name="classCode" // Lowercase to match state key
+              name="classCode"
               placeholder="e.g. CS-202"
               required
               value={formData.classCode}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-slate-50/30 placeholder:text-slate-400"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-slate-50/30"
             />
           </div>
 
-          {/* Department Selection */}
           <div className="flex flex-col gap-2.5">
             <label className="text-[13px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
               <Building size={14} className="text-indigo-400" />
@@ -129,7 +125,6 @@ const AddClasses = ({ token }) => {
           </div>
         </div>
 
-        {/* Description Field */}
         <div className="flex flex-col gap-2.5">
           <label className="text-[13px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
             <Info size={14} className="text-indigo-400" />
@@ -141,15 +136,15 @@ const AddClasses = ({ token }) => {
             rows="4"
             value={formData.description}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-slate-50/30 resize-none placeholder:text-slate-400"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-slate-50/30 resize-none"
           />
         </div>
 
         <div className="flex items-center justify-end gap-4 pt-6 border-t border-slate-100">
           <button
             type="button"
-            onClick={() => setFormData({className: '', classCode: '', description: '', departmentId: ''})}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all font-semibold text-sm"
+            onClick={() => setFormData({className: '', classCode: '', description: '', departmentId: '', creatorId: user._id})}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl text-slate-500 hover:bg-slate-100 transition-all font-semibold text-sm"
           >
             <XCircle size={18} />
             Discard

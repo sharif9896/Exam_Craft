@@ -2,18 +2,15 @@ import TryCatch from "../middlewares/TryCatch.js";
 import Classes from "../models/Classes.js";
 
 const addClasses = TryCatch(async (req, res) => {
-    // Standardize to camelCase to match the frontend state
     const { className, classCode, description, departmentId } = req.body;
     
-    // console.log("Received data:", { className, classCode, description, departmentId });
-    
-    const { adminId } = req;
-
+    const { adminid } = req;
+    console.log(adminid)
     const newClasses = new Classes({
         className, // Short-hand for className: className
         classCode,
         description,
-        creatorId: adminId,
+        creatorId: adminid,
         departmentId: departmentId
     });
 
@@ -48,7 +45,7 @@ const updateClasses = TryCatch(async (req, res) => {
     
     const updatedClasses = await Classes.findOneAndUpdate(
         { _id: id, creatorId: adminId },
-        { className, classCode, description },
+        { className, classCode, description, creatorId: adminId },
         { new: true }
     );
 

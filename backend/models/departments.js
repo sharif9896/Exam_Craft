@@ -19,10 +19,14 @@ const departmentSchema = new mongoose.Schema({
         type: String
     },
     creatorId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
     createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    updatedAt:{        
         type: Date,
         default: Date.now
     }

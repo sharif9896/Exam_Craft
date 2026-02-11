@@ -3,13 +3,13 @@ import Department from "../models/departments.js";
 
 const addepartment = TryCatch(async (req, res) => {
     const {academicYear, departmentName, departmentCode, description} = req.body;
-    const {adminId} = req;
+    const {adminid} = req;
         const newDepartment = new Department({
             academicYear,
             departmentName,
             departmentCode,
             description,
-            creatorId: adminId
+            creatorId: adminid
         });
         await newDepartment.save();
         return res.status(201).json({ message: "Department added successfully!", data: newDepartment });
@@ -34,14 +34,15 @@ const getDepartmentById = TryCatch(async (req, res) => {
 const updateDepartment = TryCatch(async (req, res) => {
     const { id } = req.params;
     const {academicYear, departmentName, departmentCode, description} = req.body;
-    const {adminId} = req;
+    const {adminid} = req;
     const updatedDepartment = await Department.findOneAndUpdate(
-        { _id: id, creatorId: adminId },
+        { _id: id, creatorId: adminid },
         {
             academicYear,
             departmentName,
             departmentCode,
-            description
+            description,
+            creatorId: adminid
         },
         { new: true }
     );

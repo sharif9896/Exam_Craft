@@ -8,8 +8,11 @@ const authHeaderforall = async (req, res, next) =>{
 
     try{
         const token = authHeader.split(" ")[1];
+        // console.log(token);
         const decode = jwt.verify(token, process.env.JWT_ADMIN);
+        // console.log(decode);
         req.adminId = decode._id;
+        req.adminid = decode.id;
         next();
     }catch(err){
         return res.status(400).json({message: "Error in authentication middleware!", err});

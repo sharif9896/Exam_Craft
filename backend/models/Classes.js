@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const classSchema = new mongoose.Schema({
     className: {
         type: String,
@@ -14,7 +15,7 @@ const classSchema = new mongoose.Schema({
     },
     creatorId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'User', // Added required to ensure it's always there
     },
     departmentId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -25,5 +26,6 @@ const classSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+
 const Classes = mongoose.model('Class', classSchema);
 export default Classes;
