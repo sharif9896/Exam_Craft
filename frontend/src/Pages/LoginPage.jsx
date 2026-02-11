@@ -24,13 +24,15 @@ const LoginPage = () => {
             password: password
           },
         );
-        toast.success(data.message);
         Cookies.setItem("token", data.token, {
                 expires: 15,
                 secure: false,
                 path: "/",
             });
-        navigate("/admin/dashboard");
+        window.location.href = "/admin/dashboard";
+        
+        toast.success(data.message);
+        // navigate();
       } catch (e) {
         toast.error(e.response.data.message);
         console.log(e);

@@ -9,6 +9,7 @@ import syllabusRouter from './routes/Syllabusroutes.js';
 import thingsRouter from './routes/AllowedThingsroutes.js';
 import staffRouter from './routes/staffroutes.js';
 import departmentRouter from './routes/Departmentroutes.js';
+import classRouter from './routes/Classesroutes.js';
 dotenv.config();
 
 const app = express();
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 // API ENDPOINTS
 app.use('/api/user', userRouter);
 app.use('/api/departments', departmentRouter);
+app.use('/api/classes', classRouter)
 app.use('/api/staff', staffRouter);
 app.use('/api/syllabus', syllabusRouter);
 app.use('/api/allowedthings', thingsRouter);

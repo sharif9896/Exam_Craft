@@ -251,7 +251,7 @@ const AdminStaffs = () => {
           <div className="max-w-7xl mx-auto">
              {/* This is where your Routes (Outlet) would render */}
              {/* <div className="bg-white border-2 border-dashed border-slate-200 rounded-3xl h-96 flex items-center justify-center text-slate-400"> */}
-                <AddStaffs />
+                <AddStaffs token={token} />
              {/* </div> */}
           </div>
         </main>

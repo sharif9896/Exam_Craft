@@ -15,6 +15,7 @@ import AdminAllowed from './Pages/AdminAllowed.jsx'
 import AddSyllabusForm from './Pages/Demo.jsx'
 import AdminSyllabus from './Pages/AdminSyllabus.jsx'
 import AppProvider from './context/AppContext.jsx'
+import AdminManageDpt from './Pages/AdminManageDpt.jsx'
 
 
 const router = createBrowserRouter([
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
     {path: "/admin/staffs/add", element: <AdminStaffs />},
     {path: "/admin/allowed-things/add", element: <AdminAllowed/>},
     {path: "/admin/syllabus/add", element: <AdminSyllabus/>},
+    {path: "/admin/departments/manage", element: <AdminManageDpt/>},
     {path: "/t", element: <AddSyllabusForm />}
   ]}
 ])

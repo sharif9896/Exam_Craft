@@ -10,15 +10,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Cookies from 'js-cookies'
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-// import AddDepartmentForm from './AddDepartmentForm';
-import AddClasses from '../components/AddClasses';
+import AddDepartmentForm from '../components/AddDepartmentForm';
+import { useAppContext } from '../context/AppContext';
+import ManageDptByAdmin from '../components/ManageDptByAdmin';
+// // import { useContext } from 'react';
+// import { useAppContext } from '../context/AppContext';
 
-const AdminClasses = () => {
+const AdminManageDpt = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState({});
   const [isProfileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const {department, setdepartment} = useAppContext();
+
+  // console.log(department);
 
   const token = Cookies.getItem("token")
   useEffect(() => {
@@ -91,7 +97,7 @@ const AdminClasses = () => {
     try{
       Cookies.removeItem("token");
       toast.success("Logout Successfully");
-      navigate("/login");
+      navigate("/");
     }catch(e){
 
     }
@@ -248,11 +254,11 @@ const AdminClasses = () => {
         </header>
 
         {/* Dashboard Content Container */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50 border-dashed" >
           <div className="max-w-7xl mx-auto">
              {/* This is where your Routes (Outlet) would render */}
              {/* <div className="bg-white border-2 border-dashed border-slate-200 rounded-3xl h-96 flex items-center justify-center text-slate-400"> */}
-                <AddClasses token={token} />
+                <ManageDptByAdmin token={token}/>
              {/* </div> */}
           </div>
         </main>
@@ -261,6 +267,7 @@ const AdminClasses = () => {
   );
 };
 
-export default AdminClasses;
+export default AdminManageDpt;
+
 
 

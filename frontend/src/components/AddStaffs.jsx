@@ -1,41 +1,84 @@
-import React, { useState } from 'react';
-import { 
-  User, Mail, Lock, GraduationCap, Briefcase, 
-  Stethoscope, Building, Phone, MapPin, Save, 
-  XCircle, Eye, EyeOff 
-} from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useAppContext } from '../context/AppContext';
+import React, { useState } from "react";
+import {
+  User,
+  Mail,
+  Lock,
+  GraduationCap,
+  Briefcase,
+  Stethoscope,
+  Building,
+  Phone,
+  MapPin,
+  Save,
+  XCircle,
+  Eye,
+  EyeOff,
+} from "lucide-react";
+import { motion } from "framer-motion";
+import { useAppContext } from "../context/AppContext";
+import axios from "axios";
+import { BACKEND_URL } from "../utils/utils";
+import { toast } from "react-toastify";
 
-const AddStaffs = () => {
+const AddStaffs = ({ token }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    qualification: '',
-    designation: '',
-    spetialization: '',
-    department: '',
-    phonenumber: '',
-    address: ''
+    name: "",
+    email: "",
+    password: "",
+    qualification: "",
+    designation: "",
+    spetialization: "",
+    department: "",
+    phonenumber: "",
+    address: "",
   });
 
-  
-    const {department, setdepartment} = useAppContext();
+  const { department, setdepartment } = useAppContext();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Registering Staff Member:", formData);
-    // Logic: axios.post('/api/staff', formData)
+    console.log("Saving Class Data:", formData);
+
+    try {
+      const { data } = await axios.post(
+        `${BACKEND_URL}/api/staff/register`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      toast.success(data.message || "Staff added!");
+
+      // Reset form after successful save
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        qualification: "",
+        designation: "",
+        spetialization: "",
+        department: "",
+        phonenumber: "",
+        address: "",
+      });
+    } catch (error) {
+      console.error("Submission error:", error);
+      const errorMsg = error.response?.data?.message || "Internal Server Error";
+      toast.error(errorMsg);
+    }
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden"
@@ -47,13 +90,14 @@ const AddStaffs = () => {
         </div>
         <div>
           <h2 className="text-xl font-bold">Staff Registration</h2>
-          <p className="text-slate-400 text-sm">Add a new staff member to the organization</p>
+          <p className="text-slate-400 text-sm">
+            Add a new staff member to the organization
+          </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="p-8 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
           {/* Full Name */}
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
@@ -101,7 +145,7 @@ const AddStaffs = () => {
                 onChange={handleChange}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all bg-slate-50/50"
               />
-              <button 
+              <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 transition-colors"
@@ -130,7 +174,8 @@ const AddStaffs = () => {
           {/* Qualification */}
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-              <GraduationCap size={16} className="text-blue-500" /> Qualification
+              <GraduationCap size={16} className="text-blue-500" />{" "}
+              Qualification
             </label>
             <input
               name="qualification"
@@ -181,17 +226,19 @@ const AddStaffs = () => {
               <Building size={16} className="text-blue-500" /> Department
             </label>
             <select
-                name="departmentId"
-                required
-                value={formData.department}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-slate-50/30 appearance-none text-slate-700 cursor-pointer"
-              >
-                <option value="">Select Department</option>
-                {department.map(dept => (
-                  <option key={dept._id} value={dept.departmentName}>{dept.departmentName}</option>
-                ))}
-              </select>
+              name="department"
+              required
+              value={formData.department}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-slate-50/30 appearance-none text-slate-700 cursor-pointer"
+            >
+              <option value="">Select Department</option>
+              {department.map((dept) => (
+                <option key={dept._id} value={dept.departmentName}>
+                  {dept.departmentName}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

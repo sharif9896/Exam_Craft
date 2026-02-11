@@ -20,6 +20,7 @@ export const AppProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [socket, setSocket] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]); 
+    const [ staffs, setStaffs ] = useState([]);
 
     async function fetchDepartments() {
         try {
@@ -40,17 +41,18 @@ export const AppProvider = ({ children }) => {
         }
     }
 
-    async function fetchUsers() {
+    async function fetchStaffs() {
         try {
-            const token = Cookies.get("token");
+            const token = Cookies.getItem("token");
             if (!token) {
                 setloading1(false);
                 return;
             }
-            const { data } = await axios.get(`${BACKEND_URL}/api/user/user/all`, {
+            const { data } = await axios.get(`${BACKEND_URL}/api/staff/getstaffs`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            setUsers(data.users);
+            console.log(data.staff);
+            setStaffs(data.staff);
             setIsAuth(true);
         } catch (e) {
             console.error("Fetch users error:", e);
@@ -81,12 +83,15 @@ export const AppProvider = ({ children }) => {
 
     useEffect(() => {
         fetchDepartments();
+        fetchStaffs();
     }, []);
 
    
     const contextValue = {
         department,
         setdepartment,
+        staffs,
+        setStaffs,
     };
 
     return (

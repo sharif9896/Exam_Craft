@@ -6,24 +6,18 @@ import {
 import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
 import { BACKEND_URL } from '../utils/utils';
+import axios from 'axios';
+import { toast } from 'react-toastify'; // Ensure this is installed/imported
 
-const AddClasses = ({token}) => {
+const AddClasses = ({ token }) => {
   const [formData, setFormData] = useState({
     className: '',
-    classCode: '',
-    departmentId: '',
-    description: ''
+    classCode: '', // Changed from ClassCode to classCode (lowercase)
+    description: '',
+    departmentId: ''
   });
 
-  const {department, setdepartment} = useAppContext();
-//   console.log(department);
-
-  // Mock data - In a real app, you would fetch these from your Departments collection
-  const departments = [
-    { id: '1', name: 'Computer Science' },
-    { id: '2', name: 'Electrical Engineering' },
-    { id: '3', name: 'Business Administration' }
-  ];
+  const { department } = useAppContext();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,15 +26,29 @@ const AddClasses = ({token}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Saving Class Data:", formData);
-    
-    const {data} = await axios.post(`${BACKEND_URL}/api/departments/addepartment`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
 
-    toast.success(data.message);
-    console.log(data.message);
+    try {
+      const { data } = await axios.post(`${BACKEND_URL}/api/classes/addclass`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      toast.success(data.message || "Class added!");
+      
+      // Reset form after successful save
+      setFormData({
+        className: '',
+        classCode: '',
+        description: '',
+        departmentId: ''
+      });
+      
+    } catch (error) {
+      console.error("Submission error:", error);
+      const errorMsg = error.response?.data?.message || "Internal Server Error";
+      toast.error(errorMsg);
+    }
   };
 
   return (
@@ -50,7 +58,6 @@ const AddClasses = ({token}) => {
       transition={{ duration: 0.4 }}
       className="bg-white border-2 border-dashed border-slate-200 rounded-3xl h-fit p-6 items-center justify-center text-slate-400"
     >
-      {/* Form Header */}
       <div className="flex items-center gap-4 mb-8 border-b border-slate-100 pb-5">
         <div className="bg-indigo-100 p-3 rounded-2xl text-indigo-600 shadow-sm">
           <BookOpen size={26} />
@@ -62,7 +69,6 @@ const AddClasses = ({token}) => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Horizontal Row for Primary Inputs */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           
           {/* Class Name */}
@@ -90,7 +96,7 @@ const AddClasses = ({token}) => {
             </label>
             <input
               type="text"
-              name="classCode"
+              name="classCode" // Lowercase to match state key
               placeholder="e.g. CS-202"
               required
               value={formData.classCode}
@@ -99,7 +105,7 @@ const AddClasses = ({token}) => {
             />
           </div>
 
-          {/* Department Selection (Foreign Key) */}
+          {/* Department Selection */}
           <div className="flex flex-col gap-2.5">
             <label className="text-[13px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
               <Building size={14} className="text-indigo-400" />
@@ -114,7 +120,7 @@ const AddClasses = ({token}) => {
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-slate-50/30 appearance-none text-slate-700 cursor-pointer"
               >
                 <option value="">Select Department</option>
-                {department.map(dept => (
+                {department && department.map(dept => (
                   <option key={dept._id} value={dept._id}>{dept.departmentName}</option>
                 ))}
               </select>
@@ -131,7 +137,7 @@ const AddClasses = ({token}) => {
           </label>
           <textarea
             name="description"
-            placeholder="Details about syllabus, prerequisites, or learning objectives..."
+            placeholder="Details about syllabus..."
             rows="4"
             value={formData.description}
             onChange={handleChange}
@@ -139,10 +145,10 @@ const AddClasses = ({token}) => {
           />
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center justify-end gap-4 pt-6 border-t border-slate-100">
           <button
             type="button"
+            onClick={() => setFormData({className: '', classCode: '', description: '', departmentId: ''})}
             className="flex items-center gap-2 px-6 py-3 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all font-semibold text-sm"
           >
             <XCircle size={18} />
