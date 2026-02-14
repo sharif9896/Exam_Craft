@@ -47,8 +47,9 @@ const LoginPage = () => {
         className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-900 rounded-xl mb-4 shadow-lg shadow-blue-900/20">
-            <LogIn className="text-white w-8 h-8" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-xl mb-4 shadow-lg shadow-blue-900/20">
+            <img src="logo.png" alt="" />
+            {/* <LogIn className="text-white w-8 h-8" /> */}
           </div>
           <h2 className="text-3xl font-bold text-slate-900">Welcome Back</h2>
           <p className="text-slate-500 mt-2">Please enter your details to sign in</p>

@@ -1,12 +1,13 @@
 import express from 'express';
 import { addsyllabus, deleteSyllabus, deleteSyllabusById, getSyllabus, getSyllabusById, updateSyllabus } from '../controllers/SyllabusController.js';
 import upload from '../middlewares/multer.js';
-import staffMiddleware from '../middlewares/staffMiddleware.js';
 import adminMiddleware from '../middlewares/adminMiddleware.js';
 
 const syllabusRouter = express.Router();
 
-syllabusRouter.post('/addsyllabus', staffMiddleware, adminMiddleware, upload.single('file'), addsyllabus);
+// MATCHED: 'syllabusFile' must match the key used in Frontend FormData
+syllabusRouter.post('/addsyllabus', adminMiddleware, upload.single('syllabusFile'), addsyllabus);
+
 syllabusRouter.get('/getsyllabus', getSyllabus);
 syllabusRouter.get('/getsyllabus/:id', getSyllabusById);
 syllabusRouter.put('/updatesyllabus/:id', updateSyllabus);

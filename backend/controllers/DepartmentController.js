@@ -16,15 +16,15 @@ const addepartment = TryCatch(async (req, res) => {
 });
 
 const getDepartments = TryCatch(async (req, res) => {
-    const {adminId} = req;
-    const departments = await Department.find({creatorId: adminId});
+    const {adminid} = req;
+    const departments = await Department.find({creatorId: adminid});
     return res.status(200).json({ message: "Departments fetched successfully!", data: departments });
 });
 
 const getDepartmentById = TryCatch(async (req, res) => {
     const { id } = req.params;
-    const {adminId} = req;
-    const department = await Department.findOne({ _id: id, creatorId: adminId });
+    const {adminid} = req;
+    const department = await Department.findOne({ _id: id, creatorId: adminid });
     if (!department) {
         return res.status(404).json({ message: "Department not found" });
     }
@@ -54,8 +54,9 @@ const updateDepartment = TryCatch(async (req, res) => {
 
 const deleteDepartment = TryCatch(async (req, res) => {
     const { id } = req.params;
-    const {adminId} = req;
-    const deletedDepartment = await Department.findOneAndDelete({ _id: id, creatorId: adminId });
+    // console.log(id);
+    const {adminid} = req;
+    const deletedDepartment = await Department.findOneAndDelete({ _id: id, creatorId: adminid });
     if (!deletedDepartment) {
         return res.status(404).json({ message: "Department not found or not authorized to delete" });
     }

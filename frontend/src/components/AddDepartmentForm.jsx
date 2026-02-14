@@ -5,16 +5,17 @@ import axios from 'axios';
 import { BACKEND_URL } from '../utils/utils';
 import { toast } from 'react-toastify';
 import { useAppContext } from '../context/AppContext';
+import { useEffect } from 'react';
 
 const AddDepartmentForm = ({token}) => {
-
+  const [loading, setloading] = useState(false);
   const {user} = useAppContext();
   const [formData, setFormData] = useState({
     academicYear: '',
     departmentName: '',
     departmentCode: '',
     description: '',
-    creatorId: user._id,
+    creatorId: user?._id || "",
   });
 
   const handleChange = (e) => {
@@ -32,8 +33,10 @@ const AddDepartmentForm = ({token}) => {
     });
 
     toast.success(data.message);
+    setloading(true);
     console.log(data.message);
   };
+
 
   return (
     <motion.div 

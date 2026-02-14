@@ -10,6 +10,7 @@ import thingsRouter from './routes/AllowedThingsroutes.js';
 import staffRouter from './routes/staffroutes.js';
 import departmentRouter from './routes/Departmentroutes.js';
 import classRouter from './routes/Classesroutes.js';
+import notificationRouter from './routes/notificationRoute.js';
 dotenv.config();
 
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/classes', classRouter)
 app.use('/api/staff', staffRouter);
 app.use('/api/syllabus', syllabusRouter);
 app.use('/api/allowedthings', thingsRouter);
+app.use("/api/notifications", notificationRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

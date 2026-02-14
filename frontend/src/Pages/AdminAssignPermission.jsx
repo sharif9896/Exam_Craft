@@ -9,10 +9,11 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import Cookies from 'js-cookies';
 import { toast } from 'react-toastify';
-import AddClasses from '../components/AddClasses';
+import AddAllowed from '../components/AddAllowed';
 import { useAppContext } from '../context/AppContext';
+import AddAllowedForm from '../components/AddAllowedForm';
 
-const AdminClasses = () => {
+const AdminAssignPermission = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState({});
   const [isProfileOpen, setProfileOpen] = useState(false);
@@ -101,7 +102,7 @@ const AdminClasses = () => {
   const handleLogout = () => {
     Cookies.removeItem("token");
     toast.success("Logout Successfully");
-    navigate("/login");
+    navigate("/");
   };
 
   return (
@@ -193,6 +194,7 @@ const AdminClasses = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Header */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm z-10">
           <div className="flex items-center gap-4">
             <button 
@@ -259,7 +261,7 @@ const AdminClasses = () => {
 
         <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50">
           <div className="max-w-7xl mx-auto">
-             <AddClasses token={token} />
+             <AddAllowedForm token={token}/>
           </div>
         </main>
       </div>
@@ -267,4 +269,4 @@ const AdminClasses = () => {
   );
 };
 
-export default AdminClasses;
+export default AdminAssignPermission;

@@ -30,6 +30,20 @@ const ManageClsByAdmin = ({ token }) => {
     }
   }, [classes]);
 
+  const handledelete = async (id) => {
+      try{
+        const {data} = await axios.delete(`${BACKEND_URL}/api/classes/del/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        });
+        window.location.reload();
+        toast.success("Department Deleted Successfully");
+      }catch(e){
+        console.log(e);
+      }
+    };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedClass?._id) return;
@@ -165,7 +179,7 @@ const ManageClsByAdmin = ({ token }) => {
 
         {/* RIGHT: List Section */}
         <div className="border border-slate-200 w-full lg:w-1/2 p-5 rounded-2xl bg-white max-h-125 overflow-y-auto custom-scrollbar">
-          <div className="flex items-center justify-between mb-4 sticky top-0 bg-white pb-2 z-10">
+          <div className="flex items-center justify-between mb-4  bg-white pb-2 z-10">
             <h2 className="font-semibold flex items-center gap-2 text-slate-700">
               <Hash size={18} /> Available Classes ({classes?.length || 0})
             </h2>
@@ -200,7 +214,7 @@ const ManageClsByAdmin = ({ token }) => {
                       </span>
                     </div>
                   </div>
-                  <button className="p-2 hover:bg-red-50 rounded-full text-slate-400 hover:text-red-500 transition-colors">
+                  <button onClick={() => handledelete(cls._id)} className="p-2 hover:bg-red-50 rounded-full text-slate-400 hover:text-red-500 transition-colors">
                     <Trash2 size={16} />
                   </button>
                 </motion.div>

@@ -1,43 +1,175 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { useAppContext } from "../context/AppContext";
+import { User, Search, Filter } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddAllowed = () => {
-  const {staffs} = useAppContext();
+  const { staffs } = useAppContext();
+  const navigate = useNavigate();
 
-  console.log(staffs);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDept, setSelectedDept] = useState("");
+  const [selectedStaffIds, setSelectedStaffIds] = useState([]);
+
+  // Extract unique departments for the filter dropdown
+  const departments = useMemo(() => {
+    const depts = staffs.map((s) => s.department).filter(Boolean);
+    return [...new Set(depts)];
+  }, [staffs]);
+
+  // Search and Filter logic
+  const filteredStaffs = useMemo(() => {
+    return staffs.filter((staff) => {
+      const matchesSearch = staff.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesDept = selectedDept === "" || staff.department === selectedDept;
+      return matchesSearch && matchesDept;
+    });
+  }, [staffs, searchTerm, selectedDept]);
+
+  const handleCheckboxChange = (id) => {
+    setSelectedStaffIds((prev) =>
+      prev.includes(id) ? prev.filter((staffId) => staffId !== id) : [...prev, id]
+    );
+  };
+
+  const handleReset = () => {
+    setSearchTerm("");
+    setSelectedDept("");
+    setSelectedStaffIds([]);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // VALIDATION
+    if (selectedStaffIds.length === 0) {
+      return toast.warn("Please select a staff member first.");
+    }
+
+    if (selectedStaffIds.length > 1) {
+      return toast.error("Please select only ONE staff member for individual updates.");
+    }
+
+    // Find the specific staff object to get full details
+    const staffToUpdate = staffs.find((s) => s._id === selectedStaffIds[0]);
+
+    if (staffToUpdate) {
+      // 1. Store the ID, Name, and Department in localStorage
+      localStorage.setItem(
+        "pendingPermissionStaff",
+        JSON.stringify({
+          id: staffToUpdate._id,
+          name: staffToUpdate.name,
+          department: staffToUpdate.department,
+          email: staffToUpdate.email,
+        })
+      );
+
+      // 2. Navigate to the form page
+      navigate("/add-permissions-form");
+    }
+  };
+
   return (
-    <div>
-      <div className="w-full min-h-screen  ">
-        <div className="min-h-screen overflow-y-auto m-5 rounded-xl px-5">
-          <div className="border rounded border-gray-500">
-            <div className="flex justify-between items-center gap-2 px-5 text-[18px]  bg-pink-300 text-gray-700">
-              <div className="">
-                S.NO
-              </div>
-              <div className="">
-                Staffs Name
-              </div>
-              <div className="">
-                Staff's Allowed to
-              </div>
+    <div className="p-4">
+      <ToastContainer position="top-right" autoClose={3000} />
+      <div className="w-full min-h-screen border-2 border-slate-400 rounded-lg border-dashed bg-white">
+        <div className="p-6 text-gray-700 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="bg-white border border-dashed border-gray-300 p-3 rounded-2xl">
+              <User size={24} />
             </div>
-          </div>
-          <div className="flex bg-gray-200 min-h-fit rounded justify-between gap-2 px-10 py-3 pr-30">
-            <div className="">
-              <h4>1.</h4>
-            </div>
-            <div className="">
-              <p>Sharif Rayan</p>
-            </div>
-            <div className="">
-              <form>
-                <label htmlFor="staffs">
-                  <input className="accent-gray-500 cursor-pointer" type="checkbox" name="saffs" id="staffs" />
-                </label>
-              </form>
+            <div>
+              <h2 className="text-xl font-bold">Allowed Staffs Individually!</h2>
+              <p className="text-slate-400 text-sm">Manage staff organization access</p>
             </div>
           </div>
         </div>
+
+        {/* Filters Section */}
+        <div className="px-10 py-4 flex flex-wrap gap-4 bg-slate-50 border-y border-slate-200">
+          <div className="relative flex-1 min-w-50">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <input
+              type="text"
+              placeholder="Search staff name..."
+              className="w-full pl-10 pr-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-300"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <div className="relative min-w-50">
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <select
+              className="w-full pl-10 pr-4 py-2 border rounded-lg outline-none appearance-none bg-white focus:ring-2 focus:ring-blue-300"
+              value={selectedDept}
+              onChange={(e) => setSelectedDept(e.target.value)}
+            >
+              <option value="">All Departments</option>
+              {departments.map((dept) => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="min-h-100 overflow-y-auto m-5 rounded-xl px-5">
+            <div className="border rounded border-gray-400 overflow-hidden">
+              <div className="grid grid-cols-[10%_60%_30%] gap-2 px-5 py-3 text-[16px] font-bold bg-blue-300 text-slate-600">
+                <div>S.NO</div>
+                <div>Staff Name / Department</div>
+                <div className="text-center">Allowed Access</div>
+              </div>
+
+              {filteredStaffs.length > 0 ? (
+                filteredStaffs.map((item, index) => (
+                  <div
+                    key={item._id}
+                    className={`grid grid-cols-[10%_60%_30%] items-center gap-2 px-5 py-3 border-t border-gray-200 ${
+                      selectedStaffIds.includes(item._id) ? "bg-blue-50" : "bg-gray-50"
+                    }`}
+                  >
+                    <div className="font-medium text-gray-600">{index + 1}</div>
+                    <div>
+                      <p className="font-semibold text-gray-800">{item.name}</p>
+                      <p className="text-xs text-slate-500">{item.department} | {item.designation}</p>
+                    </div>
+                    <div className="flex justify-center">
+                      <input
+                        type="checkbox"
+                        className="w-5 h-5 accent-green-600 cursor-pointer"
+                        checked={selectedStaffIds.includes(item._id)}
+                        onChange={() => handleCheckboxChange(item._id)}
+                      />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="p-10 text-center text-gray-400">No staff found matching those filters.</div>
+              )}
+            </div>
+
+            <div className="flex gap-3 mt-6 pb-10">
+              <button
+                type="button"
+                onClick={handleReset}
+                className="py-2 px-6 rounded-lg bg-gray-200 cursor-pointer hover:bg-gray-300 transition-colors text-gray-700 font-semibold"
+              >
+                Reset Filters
+              </button>
+              <button
+                type="submit"
+                className="py-2 px-8 rounded-lg bg-gray-600 hover:bg-gray-700 cursor-pointer transition-colors text-white font-semibold shadow-md"
+              >
+                Update Permissions ({selectedStaffIds.length})
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   );

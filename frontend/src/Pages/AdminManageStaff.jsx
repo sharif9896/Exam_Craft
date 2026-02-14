@@ -9,10 +9,10 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import Cookies from 'js-cookies';
 import { toast } from 'react-toastify';
-import AddClasses from '../components/AddClasses';
 import { useAppContext } from '../context/AppContext';
+import ManageStaffByAdmin from '../components/ManageStaffByAdmin';
 
-const AdminClasses = () => {
+const AdminManageStaff = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState({});
   const [isProfileOpen, setProfileOpen] = useState(false);
@@ -20,11 +20,6 @@ const AdminClasses = () => {
   const navigate = useNavigate();
   const { user } = useAppContext();
   const token = Cookies.getItem("token");
-
-  // Auth Guard
-  useEffect(() => {
-    if (!token) navigate("/login");
-  }, [token, navigate]);
 
   // Menu Configuration
   const menuItems = [
@@ -82,26 +77,32 @@ const AdminClasses = () => {
     },
   ];
 
-  // Logic to automatically open the submenu based on current URL path
+  // 1. Auth Guard
+  useEffect(() => {
+    if (!token) navigate("/login");
+  }, [token, navigate]);
+
+  // 2. Logic to automatically open the submenu based on current URL
   useEffect(() => {
     menuItems.forEach(item => {
       if (item.submenu) {
-        const isActiveChild = item.submenu.some(sub => sub.path === location.pathname);
-        if (isActiveChild) {
+        const isActive = item.submenu.some(sub => sub.path === location.pathname);
+        if (isActive) {
           setOpenMenus(prev => ({ ...prev, [item.title]: true }));
         }
       }
     });
   }, [location.pathname]);
 
-  const toggleSubmenu = (menuTitle) => {
-    setOpenMenus(prev => ({ ...prev, [menuTitle]: !prev[menuTitle] }));
+  const toggleSubmenu = (menu) => {
+    setOpenMenus(prev => ({ ...prev, [menu]: !prev[menu] }));
   };
 
   const handleLogout = () => {
     Cookies.removeItem("token");
     toast.success("Logout Successfully");
-    navigate("/login");
+    navigate("/");
+    window.location.reload();
   };
 
   return (
@@ -113,16 +114,16 @@ const AdminClasses = () => {
         className="bg-[#090f18] text-slate-300 overflow-hidden shrink-0 shadow-xl z-20"
       >
         <div className="p-6 flex items-center gap-3 border-b border-slate-700/50">
-          <div className="bg-blue-600 p-2 rounded-lg text-white shadow-lg shadow-blue-500/20">
-            <LayoutDashboard size={22} />
+          <div className="bg-gray-300 border-2 border-slate-400 border-dashed p-2 rounded-lg text-white shadow-lg shadow-blue-500/20">
+            <LayoutDashboard className='w-5 h-5 text-gray-800' />
           </div>
           <span className="text-xl font-bold text-white tracking-tight">AdminPro</span>
         </div>
 
         <nav className="mt-6 px-4 space-y-1.5 overflow-y-auto h-[calc(100vh-100px)] custom-scrollbar">
           {menuItems.map((item, idx) => {
-            const isSubActive = item.submenu?.some(sub => sub.path === location.pathname);
-            const isExpanded = openMenus[item.title];
+            const isSubmenuActive = item.submenu?.some(sub => sub.path === location.pathname);
+            const isOpen = openMenus[item.title];
 
             return (
               <div key={idx} className="outline-none">
@@ -131,23 +132,23 @@ const AdminClasses = () => {
                     <button
                       onClick={() => toggleSubmenu(item.title)}
                       className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 group ${
-                        isExpanded || isSubActive ? 'bg-slate-800 text-white' : 'hover:bg-slate-800/50 hover:text-white'
+                        isOpen || isSubmenuActive ? 'bg-slate-800 text-white' : 'hover:bg-slate-800/50 hover:text-white'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className={`${isExpanded || isSubActive ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-400'}`}>
+                        <span className={`${isOpen || isSubmenuActive ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-400'}`}>
                           {item.icon}
                         </span>
                         <span className="font-medium text-[15px]">{item.title}</span>
                       </div>
                       <ChevronDown 
                         size={16} 
-                        className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
+                        className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
                       />
                     </button>
                     
                     <AnimatePresence>
-                      {isExpanded && (
+                      {isOpen && (
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
@@ -159,9 +160,7 @@ const AdminClasses = () => {
                               key={sIdx} 
                               to={sub.path} 
                               className={`flex items-center gap-3 p-2.5 pl-6 text-sm transition-all duration-200 hover:text-blue-400 ${
-                                location.pathname === sub.path 
-                                  ? 'text-blue-400 font-semibold bg-blue-500/10' 
-                                  : 'text-slate-400'
+                                location.pathname === sub.path ? 'text-blue-400 font-semibold bg-blue-500/5' : 'text-slate-400'
                               }`}
                             >
                               <ChevronRight size={14} className={location.pathname === sub.path ? "opacity-100" : "opacity-50"} />
@@ -259,7 +258,7 @@ const AdminClasses = () => {
 
         <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50">
           <div className="max-w-7xl mx-auto">
-             <AddClasses token={token} />
+            <ManageStaffByAdmin token={token}/>
           </div>
         </main>
       </div>
@@ -267,4 +266,4 @@ const AdminClasses = () => {
   );
 };
 
-export default AdminClasses;
+export default AdminManageStaff;

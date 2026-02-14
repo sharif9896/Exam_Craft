@@ -2,6 +2,7 @@ import Syllabus from "../models/Syllabusmodel.js";
 
 const addsyllabus = async (req, res) => {
     const {
+        staffId, // Added this
         staffName, 
         staffAllowedDepartment, 
         staffAllowedClass, 
@@ -12,11 +13,10 @@ const addsyllabus = async (req, res) => {
     } = req.body;
 
     const file = req.file;
-    const {UserId} = req;
-    const {adminId} = req;
+    const { adminid } = req;
 
     try {
-        if (!staffName || !staffAllowedDepartment || !staffAllowedClass || !title || !description) {
+        if (!staffId || !staffName || !staffAllowedDepartment || !staffAllowedClass || !title || !description) {
             return res.status(400).json({ message: "Required fields are missing!" });
         }
 
@@ -24,9 +24,8 @@ const addsyllabus = async (req, res) => {
             return res.status(400).json({ message: "Syllabus PDF file is required!" });
         }
 
-        // 3. Create the New Syllabus Instance
         const newSyllabus = new Syllabus({
-            staffId: UserId,
+            staffId,
             staffName,
             staffAllowedDepartment,
             staffAllowedClass,
@@ -35,10 +34,9 @@ const addsyllabus = async (req, res) => {
             title,
             description,
             syllabysPDF: file.path,
-            creatorId: adminId
+            creatorId: adminid
         });
 
-        // 4. Save to MongoDB
         await newSyllabus.save();
 
         return res.status(201).json({ 

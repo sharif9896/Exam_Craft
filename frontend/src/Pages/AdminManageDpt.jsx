@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, Building2, BookOpen, Users, 
@@ -7,14 +7,10 @@ import {
   PanelLeftClose
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Cookies from 'js-cookies'
-import { useEffect } from 'react';
+import Cookies from 'js-cookies';
 import { toast } from 'react-toastify';
-import AddDepartmentForm from '../components/AddDepartmentForm';
 import { useAppContext } from '../context/AppContext';
 import ManageDptByAdmin from '../components/ManageDptByAdmin';
-// // import { useContext } from 'react';
-// import { useAppContext } from '../context/AppContext';
 
 const AdminManageDpt = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -22,22 +18,15 @@ const AdminManageDpt = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const {department, setdepartment} = useAppContext();
+  const { user } = useAppContext();
+  const token = Cookies.getItem("token");
 
-  // console.log(department);
-
-  const token = Cookies.getItem("token")
+  // Auth Guard
   useEffect(() => {
-    if(!token) navigate("/login");
-  },[])
+    if (!token) navigate("/login");
+  }, [token, navigate]);
 
-  
-
-  const toggleSubmenu = (menu) => {
-    setOpenMenus(prev => ({ ...prev, [menu]: !prev[menu] }));
-  };
-
-  // Menu Configuration with Routes
+  // Menu Configuration
   const menuItems = [
     { 
       title: 'Dashboard', 
@@ -93,15 +82,27 @@ const AdminManageDpt = () => {
     },
   ];
 
-  const handleLogout = async () => {
-    try{
-      Cookies.removeItem("token");
-      toast.success("Logout Successfully");
-      navigate("/");
-    }catch(e){
+  // Logic to automatically open the submenu based on current URL path
+  useEffect(() => {
+    menuItems.forEach(item => {
+      if (item.submenu) {
+        const hasActiveChild = item.submenu.some(sub => sub.path === location.pathname);
+        if (hasActiveChild) {
+          setOpenMenus(prev => ({ ...prev, [item.title]: true }));
+        }
+      }
+    });
+  }, [location.pathname]);
 
-    }
-  }
+  const toggleSubmenu = (menuTitle) => {
+    setOpenMenus(prev => ({ ...prev, [menuTitle]: !prev[menuTitle] }));
+  };
+
+  const handleLogout = () => {
+    Cookies.removeItem("token");
+    toast.success("Logout Successfully");
+    navigate("/");
+  };
 
   return (
     <div className="flex h-screen bg-slate-50 font-sans">
@@ -119,75 +120,79 @@ const AdminManageDpt = () => {
         </div>
 
         <nav className="mt-6 px-4 space-y-1.5 overflow-y-auto h-[calc(100vh-100px)] custom-scrollbar">
-          {menuItems.map((item, idx) => (
-            <div key={idx} className="outline-none">
-              {item.submenu ? (
-                // Menu Item with Dropdown
-                <>
-                  <button
-                    onClick={() => toggleSubmenu(item.title)}
-                    className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 group ${
-                      openMenus[item.title] ? 'bg-slate-800 text-white' : 'hover:bg-slate-800/50 hover:text-white'
+          {menuItems.map((item, idx) => {
+            const isChildActive = item.submenu?.some(sub => sub.path === location.pathname);
+            const isExpanded = openMenus[item.title];
+
+            return (
+              <div key={idx} className="outline-none">
+                {item.submenu ? (
+                  <>
+                    <button
+                      onClick={() => toggleSubmenu(item.title)}
+                      className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 group ${
+                        isExpanded || isChildActive ? 'bg-slate-800 text-white' : 'hover:bg-slate-800/50 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className={`${isExpanded || isChildActive ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-400'}`}>
+                          {item.icon}
+                        </span>
+                        <span className="font-medium text-[15px]">{item.title}</span>
+                      </div>
+                      <ChevronDown 
+                        size={16} 
+                        className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
+                      />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden bg-slate-900/40 rounded-xl mt-1 ml-2"
+                        >
+                          {item.submenu.map((sub, sIdx) => (
+                            <Link 
+                              key={sIdx} 
+                              to={sub.path} 
+                              className={`flex items-center gap-3 p-2.5 pl-6 text-sm transition-all duration-200 hover:text-blue-400 ${
+                                location.pathname === sub.path 
+                                  ? 'text-blue-400 font-semibold bg-blue-500/10' 
+                                  : 'text-slate-400'
+                              }`}
+                            >
+                              <ChevronRight size={14} className={location.pathname === sub.path ? "opacity-100" : "opacity-50"} />
+                              {sub.name}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </>
+                ) : (
+                  <Link
+                    to={item.path}
+                    className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group ${
+                      location.pathname === item.path ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-slate-800/50 hover:text-white'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className={`${openMenus[item.title] ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-400'}`}>
-                        {item.icon}
-                      </span>
-                      <span className="font-medium text-[15px]">{item.title}</span>
-                    </div>
-                    <ChevronDown 
-                      size={16} 
-                      className={`transition-transform duration-300 ${openMenus[item.title] ? 'rotate-180' : ''}`} 
-                    />
-                  </button>
-                  
-                  <AnimatePresence>
-                    {openMenus[item.title] && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="overflow-hidden bg-slate-900/40 rounded-xl mt-1 ml-2"
-                      >
-                        {item.submenu.map((sub, sIdx) => (
-                          <Link 
-                            key={sIdx} 
-                            to={sub.path} 
-                            className={`flex items-center gap-3 p-2.5 pl-6 text-sm transition-all duration-200 hover:text-blue-400 ${
-                              location.pathname === sub.path ? 'text-blue-400 font-semibold' : 'text-slate-400'
-                            }`}
-                          >
-                            <ChevronRight size={14} className="opacity-50" />
-                            {sub.name}
-                          </Link>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </>
-              ) : (
-                // Single Menu Item
-                <Link
-                  to={item.path}
-                  className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group ${
-                    location.pathname === item.path ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-slate-800/50 hover:text-white'
-                  }`}
-                >
-                  <span className={`${location.pathname === item.path ? 'text-white' : 'text-slate-400 group-hover:text-blue-400'}`}>
-                    {item.icon}
-                  </span>
-                  <span className="font-medium text-[15px]">{item.title}</span>
-                </Link>
-              )}
-            </div>
-          ))}
+                    <span className={`${location.pathname === item.path ? 'text-white' : 'text-slate-400 group-hover:text-blue-400'}`}>
+                      {item.icon}
+                    </span>
+                    <span className="font-medium text-[15px]">{item.title}</span>
+                  </Link>
+                )}
+              </div>
+            );
+          })}
         </nav>
       </motion.aside>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Header */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm z-10">
           <div className="flex items-center gap-4">
             <button 
@@ -208,7 +213,6 @@ const AdminManageDpt = () => {
               <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
 
-            {/* Profile Dropdown */}
             <div className="relative">
               <button 
                 onClick={() => setProfileOpen(!isProfileOpen)}
@@ -218,7 +222,7 @@ const AdminManageDpt = () => {
                   AD
                 </div>
                 <div className="hidden sm:block text-left">
-                  <p className="text-xs font-bold text-slate-800 leading-none">John Doe</p>
+                  <p className="text-xs font-bold text-slate-800 leading-none">{user?.username || 'Admin'}</p>
                   <p className="text-[10px] text-slate-500 mt-1">Super Admin</p>
                 </div>
                 <ChevronDown size={14} className={`text-slate-400 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
@@ -234,7 +238,7 @@ const AdminManageDpt = () => {
                   >
                     <div className="px-4 py-3 border-b border-slate-50 mb-1">
                       <p className="text-sm font-semibold text-slate-800">Administrator</p>
-                      <p className="text-xs text-slate-500">admin@example.com</p>
+                      <p className="text-xs text-slate-500">{user?.email}</p>
                     </div>
                     <Link to="/admin/profile" className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
                       <User size={16} /> My Profile
@@ -243,7 +247,7 @@ const AdminManageDpt = () => {
                       <Settings size={16} /> Account Settings
                     </Link>
                     <div className="h-px bg-slate-100 my-1 mx-2"></div>
-                    <button onClick={() => handleLogout()} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors">
+                    <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors">
                       <LogOut size={16} /> Logout
                     </button>
                   </motion.div>
@@ -253,13 +257,9 @@ const AdminManageDpt = () => {
           </div>
         </header>
 
-        {/* Dashboard Content Container */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50 border-dashed" >
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50">
           <div className="max-w-7xl mx-auto">
-             {/* This is where your Routes (Outlet) would render */}
-             {/* <div className="bg-white border-2 border-dashed border-slate-200 rounded-3xl h-96 flex items-center justify-center text-slate-400"> */}
-                <ManageDptByAdmin token={token}/>
-             {/* </div> */}
+             <ManageDptByAdmin token={token}/>
           </div>
         </main>
       </div>
@@ -268,6 +268,3 @@ const AdminManageDpt = () => {
 };
 
 export default AdminManageDpt;
-
-
-

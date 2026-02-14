@@ -70,6 +70,7 @@ const AddStaffs = ({ token }) => {
         phonenumber: "",
         address: "",
       });
+      window.location.reload();
     } catch (error) {
       console.error("Submission error:", error);
       const errorMsg = error.response?.data?.message || "Internal Server Error";
@@ -81,11 +82,11 @@ const AddStaffs = ({ token }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden"
+      className="bg-white border-dashed rounded-3xl shadow-sm border-2 border-slate-400 overflow-hidden"
     >
       {/* Header Section */}
-      <div className="bg-[#090f18] p-6 text-white flex items-center gap-4">
-        <div className="bg-blue-600 p-3 rounded-2xl">
+      <div className=" p-6 text-gray-700 flex items-center gap-4">
+        <div className="bg-white border border-dashed border-gray-300 p-3 rounded-2xl">
           <User size={24} />
         </div>
         <div>

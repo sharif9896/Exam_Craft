@@ -17,6 +17,13 @@ import AdminSyllabus from './Pages/AdminSyllabus.jsx'
 import AppProvider from './context/AppContext.jsx'
 import AdminManageDpt from './Pages/AdminManageDpt.jsx'
 import AdminManageCls from './Pages/AdminManageCls.jsx'
+import AdminManageStaff from './Pages/AdminManageStaff.jsx'
+import UserProfile from './Pages/UserProfile.jsx'
+import AccountSettings from './Pages/AccountSettings.jsx'
+import AddAllowedForm from './components/AddAllowedForm.jsx'
+import AdminAssignPermission from './Pages/AdminAssignPermission.jsx'
+import AdminSyllabusmanage from './components/AdminSyllabusmanage.jsx'
+import Adminsyllmanage from './Pages/Adminsyllmanage.jsx'
 
 
 const router = createBrowserRouter([
@@ -32,7 +39,12 @@ const router = createBrowserRouter([
     {path: "/admin/syllabus/add", element: <AdminSyllabus/>},
     {path: "/admin/departments/manage", element: <AdminManageDpt/>},
     {path: "/admin/classes/manage", element: <AdminManageCls />},
-    {path: "/t", element: <AddSyllabusForm />}
+    {path: "/admin/staffs/manage", element: <AdminManageStaff />},
+    {path: "/admin/profile", element: <UserProfile />},
+    {path: "/admin/settings", element: <AccountSettings />},
+    {path: "/add-permissions-form", element: <AdminAssignPermission  />},
+    {path: "/admin/syllabus/manage", element: <Adminsyllmanage />},
+    {path: "/t", element: <AddSyllabusForm />},
   ]}
 ])
 createRoot(document.getElementById('root')).render(

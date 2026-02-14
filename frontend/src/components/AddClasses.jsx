@@ -43,12 +43,12 @@ const AddClasses = ({ token }) => {
         departmentId: '',
         creatorId: user._id // Keep this for consistency if needed
       });
-      
     } catch (error) {
       const errorMsg = error.response?.data?.message || "Internal Server Error";
       toast.error(errorMsg);
     }
 };
+
 
   return (
     <motion.div 

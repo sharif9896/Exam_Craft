@@ -1,7 +1,7 @@
 import AllowedThings from "../models/AllowedThingsmodel.js";
 
 const AddallowedThings = async (req, res) => {
-    const {adminId} = req;
+    const {adminid} = req;
     const {StaffId, StaffName, AllowedDepartment, AllowedClass, AllowedSubject, AllowedSemester} = req.body;
     try{
         if(!AllowedDepartment || !AllowedClass || !AllowedSubject || !AllowedSemester){
@@ -15,7 +15,7 @@ const AddallowedThings = async (req, res) => {
             AllowedClass,
             AllowedSubject,
             AllowedSemester,
-            creatorId: adminId
+            creatorId: adminid
         });
         await newAllowedThing.save();
         return res.status(200).json({message: "Allowed Things added successfully!"});

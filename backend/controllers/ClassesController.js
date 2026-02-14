@@ -22,15 +22,15 @@ const addClasses = TryCatch(async (req, res) => {
 });
 
 const getClasseses = TryCatch(async (req, res) => {
-    const { adminId } = req;
-    const classes = await Classes.find({ creatorId: adminId });
+    const { adminid } = req;
+    const classes = await Classes.find({ creatorId: adminid });
     return res.status(200).json({ message: "Classes fetched successfully!", data: classes });
 });
 
 const getClassesById = TryCatch(async (req, res) => {
     const { id } = req.params;
-    const { adminId } = req;
-    const ClassesItem = await Classes.findOne({ _id: id, creatorId: adminId });
+    const { adminid } = req;
+    const ClassesItem = await Classes.findOne({ _id: id, creatorId: adminid });
     
     if (!ClassesItem) {
         return res.status(404).json({ message: "Classes not found" });
@@ -41,11 +41,11 @@ const getClassesById = TryCatch(async (req, res) => {
 const updateClasses = TryCatch(async (req, res) => {
     const { id } = req.params;
     const { className, classCode, description } = req.body;
-    const { adminId } = req;
+    const { adminid } = req;
     
     const updatedClasses = await Classes.findOneAndUpdate(
-        { _id: id, creatorId: adminId },
-        { className, classCode, description, creatorId: adminId },
+        { _id: id, creatorId: adminid },
+        { className, classCode, description, creatorId: adminid },
         { new: true }
     );
 
@@ -57,8 +57,8 @@ const updateClasses = TryCatch(async (req, res) => {
 
 const deleteClasses = TryCatch(async (req, res) => {
     const { id } = req.params;
-    const { adminId } = req;
-    const deletedClasses = await Classes.findOneAndDelete({ _id: id, creatorId: adminId });
+    const { adminid } = req;
+    const deletedClasses = await Classes.findOneAndDelete({ _id: id, creatorId: adminid });
     
     if (!deletedClasses) {
         return res.status(404).json({ message: "Classes not found or not authorized to delete" });
