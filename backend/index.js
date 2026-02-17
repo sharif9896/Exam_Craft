@@ -30,6 +30,17 @@ const __dirname = path.dirname(__filename);
 // ✅ serve uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+router.get("/download/:filename", (req, res) => {
+  const filePath = path.join(__dirname, "../uploads", req.params.filename);
+
+  res.download(filePath, (err) => {
+    if (err) {
+      res.status(404).json({ message: "File not found" });
+    }
+  });
+});
+
+
 app.get('/', (req, res) => {
   res.send('Api is running!');
 });
