@@ -1,17 +1,18 @@
 import express from 'express';
 import { addsyllabus, deleteSyllabus, deleteSyllabusById, getSyllabus, getSyllabusById, updateSyllabus } from '../controllers/SyllabusController.js';
 import upload from '../middlewares/multer.js';
-import adminMiddleware from '../middlewares/adminMiddleware.js';
+import authHeaderforall from '../middlewares/adminMiddleware.js';
 
 const syllabusRouter = express.Router();
 
-// MATCHED: 'syllabusFile' must match the key used in Frontend FormData
-syllabusRouter.post('/addsyllabus', adminMiddleware, upload.single('syllabusFile'), addsyllabus);
+syllabusRouter.post('/addsyllabus', authHeaderforall, upload.single('syllabusFile'), addsyllabus);
 
-syllabusRouter.get('/getsyllabus', getSyllabus);
-syllabusRouter.get('/getsyllabus/:id', getSyllabusById);
-syllabusRouter.put('/updatesyllabus/:id', updateSyllabus);
-syllabusRouter.delete('/deletesyllabus/:id', deleteSyllabus);
-syllabusRouter.delete('/deletesyllabusbyid/:id', deleteSyllabusById);
+syllabusRouter.get('/getsyllabus', authHeaderforall,  getSyllabus);
+syllabusRouter.get('/getsyllabus/:id', authHeaderforall, getSyllabusById);
+syllabusRouter.put('/updatesyllabus/:id', authHeaderforall, updateSyllabus);
+syllabusRouter.delete('/deletesyllabus/:id', authHeaderforall, deleteSyllabus);
+syllabusRouter.delete('/deletesyllabusbyid/:id', authHeaderforall, deleteSyllabusById);
 
 export default syllabusRouter;
+
+

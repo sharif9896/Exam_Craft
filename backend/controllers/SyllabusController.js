@@ -56,10 +56,10 @@ const addsyllabus = async (req, res) => {
 
 const getSyllabus = async (req, res) => {
 
-    const { UserId } = req;
+    // const { UserId } = req;
     const { adminId } = req;
     try {
-        const syllabus = await Syllabus.find({ $or: [{ staffId: UserId }, { creatorId: adminId }] });
+        const syllabus = await Syllabus.find({ creatorId: adminId });
         return res.status(200).json({ message: "Syllabus fetched successfully!", data: syllabus });
     } catch (e) {
         return res.status(500).json({ message: "Internal Server Error! Error in fetching syllabus" });

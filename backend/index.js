@@ -23,7 +23,13 @@ app.use(express.static('public'));
 app.use(express.json({ limit: '50mb' }));
 
 // MIDDLEWERE
-app.use('/uploads', express.static('uploads'));
+// fix __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ✅ serve uploads folder
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.get('/', (req, res) => {
   res.send('Api is running!');
 });

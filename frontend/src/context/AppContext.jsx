@@ -22,6 +22,8 @@ export const AppProvider = ({ children }) => {
     const [onlineUsers, setOnlineUsers] = useState([]); 
     const [ staffs, setStaffs ] = useState([]);
     const [classes, setclasses] = useState([]);
+    const [syllabusses ,setSyllabus] = useState([]);
+    const [allowedthings, setallowedthings] = useState([]);
 
     async function fetchadmin(){
         try{
@@ -108,6 +110,47 @@ export const AppProvider = ({ children }) => {
         }
     }
 
+    async function fetchSyllabuses(){
+        try {
+            const token = Cookies.getItem("token");
+            if (!token) {
+                setloading1(false);
+                return;
+            }
+            const { data } = await axios.get(`${BACKEND_URL}/api/syllabus/getsyllabus`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            console.log(data, "Syllabus");
+            setSyllabus(data);
+            setIsAuth(true);
+        } catch (e) {
+            console.error("Fetch users error:", e);
+        } finally {
+            setloading1(false);
+        }
+    }
+
+
+     async function fetchAllowedthings(){
+        try {
+            const token = Cookies.getItem("token");
+            if (!token) {
+                setloading1(false);
+                return;
+            }
+            const { data } = await axios.get(`${BACKEND_URL}/api/allowedthings/getthings`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            console.log(data, "Allowed");
+            setallowedthings(data);
+            setIsAuth(true);
+        } catch (e) {
+            console.error("Fetch users error:", e);
+        } finally {
+            setloading1(false);
+        }
+    }
+
     // Renamed to camelCase: fetchChats
     async function fetchChats() {
       try {
@@ -128,11 +171,15 @@ export const AppProvider = ({ children }) => {
         }
     }
 
+    
+
     useEffect(() => {
         fetchDepartments();
         fetchStaffs();
         fetchadmin();
         fetchClasses();
+        fetchSyllabuses();
+        fetchAllowedthings();
 }, []);
 
    
@@ -144,7 +191,11 @@ export const AppProvider = ({ children }) => {
         user,
         setUser,
         classes,
-        setclasses
+        setclasses,
+        syllabusses,
+        setSyllabus,
+        allowedthings,
+        setallowedthings,
     };
 
     return (
