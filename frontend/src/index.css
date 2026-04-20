@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* background: #0a0a0a; */
+  font-family: 'Inter', sans-serif;
+}
+
+.editor-content ul {
+  list-style-type: disc;
+  margin-left: 25px;
+}
+
+.editor-content ol {
+  list-style-type: decimal;
+  margin-left: 25px;
+}
+
+.editor-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.editor-content td,
+.editor-content th {
+  border: 1px solid #333;
+  padding: 8px;
+}

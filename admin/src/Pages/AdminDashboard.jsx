@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Building2, BookOpen, Users, 
   ShieldCheck, FileText, Settings, ChevronDown, 
   ChevronRight, Menu, User, LogOut, Search, Bell,
-  PanelLeftClose, TrendingUp, ArrowUpRight, ArrowDownRight,
+  PanelLeftClose, TrendingUp, ArrowUpRight, StickyNote, ArrowDownRight,
   MoreVertical
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -92,6 +92,14 @@ const AdminDashboard = () => {
             { name: 'Manage Syllabus', path: '/admin/syllabus/manage' }
           ] 
         },
+        { 
+              title: 'Paper template', 
+              icon: <StickyNote size={20} />, 
+              submenu: [
+                { name: 'Create template', path: '/pt' },
+                { name: 'Manage template', path: '/admin/syllabus/manage' }
+              ] 
+            },
     { title: 'Settings', icon: <Settings size={20} />, path: '/admin/settings', submenu: null },
   ];
 

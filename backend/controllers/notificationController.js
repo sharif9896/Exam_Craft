@@ -15,7 +15,7 @@ export const sendPermissionEmail = async (req, res) => {
 
     // 2. Define HTML Email Template
     const mailOptions = {
-      from: `"Academic Admin" <${process.env.EMAIL_USER}>`,
+      from: `"Academic Admin (COE) of IC" <${process.env.EMAIL_USER}>`,
       to: to,
       subject: subject,
       html: `

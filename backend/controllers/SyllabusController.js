@@ -57,9 +57,9 @@ const addsyllabus = async (req, res) => {
 const getSyllabus = async (req, res) => {
 
     // const { UserId } = req;
-    const { adminId } = req;
+    const { adminid } = req;
     try {
-        const syllabus = await Syllabus.find({ creatorId: adminId });
+        const syllabus = await Syllabus.find({ creatorId: adminid });
         return res.status(200).json({ message: "Syllabus fetched successfully!", data: syllabus });
     } catch (e) {
         return res.status(500).json({ message: "Internal Server Error! Error in fetching syllabus" });
@@ -136,4 +136,18 @@ const deleteSyllabusById = async (req, res) => {
     }
 }
 
-export { addsyllabus, getSyllabus, getSyllabusById, updateSyllabus, deleteSyllabus, deleteSyllabusById };
+const staffsyllget = async (req, res) => {
+    const {staffId} = req.params;
+    // console.log(staffId)
+    try{
+        const allowed = await Syllabus.findOne({staffId: staffId});
+        if(!allowed){
+            return res.status(404).json({message: "No allowed things found for this staff!"});
+        }
+        return res.status(200).json({message: "Allowed Things fetched successfully!", data: allowed});
+    }catch(e){
+        return res.status(401).json({error: "Error in Getting staff allowed things!", e});
+    }
+}
+
+export { addsyllabus, getSyllabus, getSyllabusById, updateSyllabus, deleteSyllabus, deleteSyllabusById, staffsyllget };

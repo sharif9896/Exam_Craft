@@ -1,0 +1,57 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import LoginPage from './Pages/LoginPage.jsx'
+import SignupPage from './Pages/SignupPage.jsx'
+import AdminDashboard from './Pages/AdminDashboard.jsx'
+import Admindept from './Pages/Admindept.jsx'
+import AdminClasses from './Pages/AdminClasses.jsx'
+import AdminStaffs from './Pages/AdminStaffs.jsx'
+import AdminAllowed from './Pages/AdminAllowed.jsx'
+import AddSyllabusForm from './Pages/Demo.jsx'
+import AdminSyllabus from './Pages/AdminSyllabus.jsx'
+import AppProvider from './context/AppContext.jsx'
+import AdminManageDpt from './Pages/AdminManageDpt.jsx'
+import AdminManageCls from './Pages/AdminManageCls.jsx'
+import AdminManageStaff from './Pages/AdminManageStaff.jsx'
+import UserProfile from './Pages/UserProfile.jsx'
+import AccountSettings from './Pages/AccountSettings.jsx'
+import AdminAssignPermission from './Pages/AdminAssignPermission.jsx'
+import Adminsyllmanage from './Pages/Adminsyllmanage.jsx'
+import AdminAllowedthings from './Pages/AdminAllowedthings.jsx'
+import PaperTemplate from './Pages/PaperTemplate.jsx'
+
+const router = createBrowserRouter([
+  {path: "/", element: <App/>, children: [
+    // {path: "/", element: <Home/>},
+    {path: "/", element: <LoginPage/>},
+    {path: "/signup", element: <SignupPage/>},
+    {path: "/admin/dashboard", element: <AdminDashboard/>},
+    {path: "/admin/departments/add", element: <Admindept/>},
+    {path: "/admin/classes/add", element: <AdminClasses/>},
+    {path: "/admin/staffs/add", element: <AdminStaffs />},
+    {path: "/admin/allowed-things/add", element: <AdminAllowed/>},
+    {path: "/admin/syllabus/add", element: <AdminSyllabus/>},
+    {path: "/admin/departments/manage", element: <AdminManageDpt/>},
+    {path: "/admin/classes/manage", element: <AdminManageCls />},
+    {path: "/admin/staffs/manage", element: <AdminManageStaff />},
+    {path: "/admin/profile", element: <UserProfile />},
+    {path: "/admin/settings", element: <AccountSettings />},
+    {path: "/add-permissions-form", element: <AdminAssignPermission  />},
+    {path: "/admin/syllabus/manage", element: <Adminsyllmanage />},
+    {path: "/admin/allowed-things/manage", element: <AdminAllowedthings />},
+    {path: "/pt", element: <PaperTemplate />},
+    // {path: "/editor", element: <Editor />},
+    // {path: "/admin/question-paper", element: <QuestionPaperSetter />},
+    {path: "/t", element: <AddSyllabusForm />}, 
+  ]}
+])
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <AppProvider>
+    <RouterProvider router={router}></RouterProvider>
+    </AppProvider>
+  </StrictMode>,
+)

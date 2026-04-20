@@ -2,49 +2,26 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import { Home } from 'lucide-react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import LoginPage from './Pages/LoginPage.jsx'
-import SignupPage from './Pages/SignupPage.jsx'
-import AdminDashboard from './Pages/AdminDashboard.jsx'
-import { ToastContainer } from 'react-toastify'
-import Admindept from './Pages/Admindept.jsx'
-import AdminClasses from './Pages/AdminClasses.jsx'
-import AdminStaffs from './Pages/AdminStaffs.jsx'
-import AdminAllowed from './Pages/AdminAllowed.jsx'
-import AddSyllabusForm from './Pages/Demo.jsx'
-import AdminSyllabus from './Pages/AdminSyllabus.jsx'
 import AppProvider from './context/AppContext.jsx'
-import AdminManageDpt from './Pages/AdminManageDpt.jsx'
-import AdminManageCls from './Pages/AdminManageCls.jsx'
-import AdminManageStaff from './Pages/AdminManageStaff.jsx'
-import UserProfile from './Pages/UserProfile.jsx'
-import AccountSettings from './Pages/AccountSettings.jsx'
-import AddAllowedForm from './components/AddAllowedForm.jsx'
-import AdminAssignPermission from './Pages/AdminAssignPermission.jsx'
-import AdminSyllabusmanage from './components/AdminSyllabusmanage.jsx'
-import Adminsyllmanage from './Pages/Adminsyllmanage.jsx'
+import LoaderVerify from './components/LoaderVerify.jsx'
+import Home from './Pages/Home.jsx'
+import ProfilePage from './components/ProfilePage.jsx'
+import StaffAccessCard from './components/StaffAccessCard.jsx'
+import AssignmentCard from './components/AssignmentCard.jsx'
+import Editor from './components/Editor.jsx'
 
 
 const router = createBrowserRouter([
-  {path: "/", element: <App/>, children: [
-    {path: "/", element: <Home/>},
-    {path: "/login", element: <LoginPage/>},
-    {path: "/signup", element: <SignupPage/>},
-    {path: "/admin/dashboard", element: <AdminDashboard/>},
-    {path: "/admin/departments/add", element: <Admindept/>},
-    {path: "/admin/classes/add", element: <AdminClasses/>},
-    {path: "/admin/staffs/add", element: <AdminStaffs />},
-    {path: "/admin/allowed-things/add", element: <AdminAllowed/>},
-    {path: "/admin/syllabus/add", element: <AdminSyllabus/>},
-    {path: "/admin/departments/manage", element: <AdminManageDpt/>},
-    {path: "/admin/classes/manage", element: <AdminManageCls />},
-    {path: "/admin/staffs/manage", element: <AdminManageStaff />},
-    {path: "/admin/profile", element: <UserProfile />},
-    {path: "/admin/settings", element: <AccountSettings />},
-    {path: "/add-permissions-form", element: <AdminAssignPermission  />},
-    {path: "/admin/syllabus/manage", element: <Adminsyllmanage />},
-    {path: "/t", element: <AddSyllabusForm />},
+  {path: "/", element: <App/>, 
+    children: [
+      {path: "/", element: <Home />},
+    {path: "/verify", element: <LoaderVerify />},
+    {path: "/profile", element: <ProfilePage />},
+    {path: "/staffaccess", element: <StaffAccessCard />},
+    {path: "/assignment", element: <AssignmentCard />},
+    {path:"/editor", element: <Editor/>},
+    {path: "*", element: <div className='min-h-screen flex items-center justify-center'><h1 className='text-4xl font-bold text-gray-700'>404 - Page Not Found</h1></div>},
   ]}
 ])
 createRoot(document.getElementById('root')).render(

@@ -53,6 +53,19 @@ const stafflogin = async (req, res) => {
       }
 }
 
+const staffProfileByemail = async (req, res) => {
+    const {email} = req.params;
+    try {
+        const staff = await Staff.findOne({ email: email });
+        if (!staff) {
+            return res.status(400).json({ message: "Staff is not found!" });
+        }
+        return res.status(200).json({ message: "Fetched Successfully!", staff });
+    } catch (e) {
+        return res.status().json({ message: "Error in getting staff by his ID!" });
+    }
+}
+
 const StaffProfileById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -194,4 +207,4 @@ const SendingSyllabusToAllowedStaff = async (req, res) => {
     }
 }
 
-export { StaffRegister, StaffProfileById, StaffsDelete, stafflogin, StaffProfileslists, StaffProfileUpdatedById, StaffProfileDeletById, searchStaffByName };
+export { StaffRegister, staffProfileByemail, StaffProfileById, StaffsDelete, stafflogin, StaffProfileslists, StaffProfileUpdatedById, StaffProfileDeletById, searchStaffByName };

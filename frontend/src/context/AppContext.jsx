@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 // import { BACKEND_URL } from '../utils/utils';
 import axios from 'axios';
 // import Cookies from 'js-cookie';
-import Cookies from 'js-cookies'
+import Cookies from 'js-cookie'
 import { Toaster } from 'react-hot-toast';
 import { BACKEND_URL } from '../utils/utils';
 import { ToastContainer } from 'react-toastify';
@@ -24,10 +24,11 @@ export const AppProvider = ({ children }) => {
     const [classes, setclasses] = useState([]);
     const [syllabusses ,setSyllabus] = useState([]);
     const [allowedthings, setallowedthings] = useState([]);
+    const [staffId, setstaffId] = useState(null);
 
     async function fetchadmin(){
         try{
-            const token = Cookies.getItem("token");
+            const token = Cookies.get("token");
             if (!token) {
                 setloading1(false);
                 return;
@@ -51,7 +52,7 @@ export const AppProvider = ({ children }) => {
 
     async function fetchDepartments() {
         try {
-            const token = Cookies.getItem("token");
+            const token = Cookies.get("token");
             if (!token) {
                 setloading1(false);
                 return;
@@ -71,7 +72,7 @@ export const AppProvider = ({ children }) => {
 
         async function fetchClasses() {
         try {
-            const token = Cookies.getItem("token");
+            const token = Cookies.get("token");
             if (!token) {
                 setloading1(false);
                 return;
@@ -92,15 +93,13 @@ export const AppProvider = ({ children }) => {
 
     async function fetchStaffs() {
         try {
-            const token = Cookies.getItem("token");
-            if (!token) {
+              const email = localStorage.getItem("user") || "Admin";
+            if (!email) {
                 setloading1(false);
                 return;
             }
-            const { data } = await axios.get(`${BACKEND_URL}/api/staff/getstaffs`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            console.log(data.staff);
+            const { data } = await axios.get(`${BACKEND_URL}/api/staff/staffget/${email}`);
+            setstaffId(data.staff._id);
             setStaffs(data.staff);
             setIsAuth(true);
         } catch (e) {
@@ -112,7 +111,7 @@ export const AppProvider = ({ children }) => {
 
     async function fetchSyllabuses(){
         try {
-            const token = Cookies.getItem("token");
+            const token = Cookies.get("token");
             if (!token) {
                 setloading1(false);
                 return;
@@ -121,7 +120,7 @@ export const AppProvider = ({ children }) => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             console.log(data, "Syllabus");
-            setSyllabus(data);
+            setSyllabus(data.data);
             setIsAuth(true);
         } catch (e) {
             console.error("Fetch users error:", e);
@@ -133,7 +132,7 @@ export const AppProvider = ({ children }) => {
 
      async function fetchAllowedthings(){
         try {
-            const token = Cookies.getItem("token");
+            const token = Cookies.get("token");
             if (!token) {
                 setloading1(false);
                 return;
@@ -142,7 +141,7 @@ export const AppProvider = ({ children }) => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             console.log(data, "Allowed");
-            setallowedthings(data);
+            setallowedthings(data.data);
             setIsAuth(true);
         } catch (e) {
             console.error("Fetch users error:", e);
@@ -174,12 +173,12 @@ export const AppProvider = ({ children }) => {
     
 
     useEffect(() => {
-        fetchDepartments();
+        // fetchDepartments();
         fetchStaffs();
-        fetchadmin();
-        fetchClasses();
-        fetchSyllabuses();
-        fetchAllowedthings();
+        // fetchadmin();
+        // fetchClasses();
+        // fetchSyllabuses();
+        // fetchAllowedthings();
 }, []);
 
    
@@ -187,6 +186,7 @@ export const AppProvider = ({ children }) => {
         department,
         setdepartment,
         staffs,
+        staffId,
         setStaffs,
         user,
         setUser,

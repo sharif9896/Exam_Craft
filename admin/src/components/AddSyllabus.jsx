@@ -91,10 +91,10 @@ const AddSyllabus = ({ token }) => {
       });
 
       toast.success("Syllabus Saved Successfully!");
-      localStorage.removeItem("pendingPermissionStaff");
+      // localStorage.removeItem("pendingPermissionStaff");
       
       setTimeout(() => {
-        window.location.href = "/admin/syllabus/manage";
+        window.location.href = "/pt";
       }, 1500);
     } catch (err) {
       // Improved error logging

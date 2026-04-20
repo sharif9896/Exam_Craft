@@ -9,10 +9,12 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import Cookies from 'js-cookies';
 import { toast } from 'react-toastify';
-import AddAllowed from '../components/AddAllowed';
+import AddSyllabus from '../components/AddSyllabus';
 import { useAppContext } from '../context/AppContext';
+import AdminSyllabusmanage from '../components/AdminSyllabusmanage';
+import ManageAllowedThings from '../components/ManageAllowedThings';
 
-const AdminAllowed = () => {
+const AdminAllowedthings = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState({});
   const [isProfileOpen, setProfileOpen] = useState(false);
@@ -26,7 +28,7 @@ const AdminAllowed = () => {
     if (!token) navigate("/login");
   }, [token, navigate]);
 
-  // Menu Configuration
+  // Menu Configuration with Routes
   const menuItems = [
     { 
       title: 'Dashboard', 
@@ -193,7 +195,6 @@ const AdminAllowed = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Header */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm z-10">
           <div className="flex items-center gap-4">
             <button 
@@ -260,7 +261,7 @@ const AdminAllowed = () => {
 
         <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50">
           <div className="max-w-7xl mx-auto">
-             <AddAllowed />
+             <ManageAllowedThings token={token}/>
           </div>
         </main>
       </div>
@@ -268,4 +269,4 @@ const AdminAllowed = () => {
   );
 };
 
-export default AdminAllowed;
+export default AdminAllowedthings;

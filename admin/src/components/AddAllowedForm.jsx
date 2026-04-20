@@ -75,7 +75,7 @@ const AddAllowedForm = ({ token }) => {
             {
               to: formData.StaffEmail,
               subject: "New Academic Permissions Assigned",
-              message: `Hello ${formData.StaffName}, you have been granted access to ${formData.AllowedSubject} for ${formData.AllowedClass}.`,
+              message: `Hello ${formData.StaffName}, you have been granted access to ${formData.AllowedSubject} for ${formData.AllowedClass}. Here is the link to login and create a Question paper : http://localhost:5173/`,
               details: formData,
             },
             { headers: { Authorization: `Bearer ${token}` } }

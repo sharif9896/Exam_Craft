@@ -9,6 +9,10 @@ const allowedThingsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    StaffEmail: {
+        type: String,
+        required: true
+    },
     AllowedDepartment: {
         type: String,
         required: true

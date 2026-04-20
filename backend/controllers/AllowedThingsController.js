@@ -2,7 +2,7 @@ import AllowedThings from "../models/AllowedThingsmodel.js";
 
 const AddallowedThings = async (req, res) => {
     const {adminid} = req;
-    const {StaffId, StaffName, AllowedDepartment, AllowedClass, AllowedSubject, AllowedSemester} = req.body;
+    const {StaffId, StaffName, StaffEmail, AllowedDepartment, AllowedClass, AllowedSubject, AllowedSemester} = req.body;
     try{
         if(!AllowedDepartment || !AllowedClass || !AllowedSubject || !AllowedSemester){
             return res.status(400).json({message: "All fields are required!"});
@@ -11,6 +11,7 @@ const AddallowedThings = async (req, res) => {
         const newAllowedThing = AllowedThings({
             StaffId,
             StaffName,
+            StaffEmail,
             AllowedDepartment,
             AllowedClass,
             AllowedSubject,
@@ -35,11 +36,11 @@ const GetAllowedThings = async (req, res) => {
 }
 
 const UpdateAllowedThings = async (req, res) => {
-    const {id, StaffId, StaffName, AllowedDepartment, AllowedClass, AllowedSubject, AllowedSemester} = req.body;
+    const {StaffId, StaffName, AllowedDepartment, AllowedClass, AllowedSubject, AllowedSemester} = req.body;
     const {adminId} = req;
+    const {id} = req.params;
     try{
         const updatedAllowedThing = await AllowedThings.findByIdAndUpdate({_id: id}, {creatorId: adminId}, {
-            id,
             StaffId,
             StaffName,
             AllowedDepartment,
@@ -65,4 +66,18 @@ const DeleteAllowedThings = async (req, res) => {
     }
 }
 
-export { AddallowedThings, GetAllowedThings, UpdateAllowedThings, DeleteAllowedThings };
+const staffalowedget = async (req, res) => {
+    const {staffId} = req.params;
+    // console.log(staffId)
+    try{
+        const allowed = await AllowedThings.findOne({StaffId: staffId});
+        if(!allowed){
+            return res.status(404).json({message: "No allowed things found for this staff!"});
+        }
+        return res.status(200).json({message: "Allowed Things fetched successfully!", data: allowed});
+    }catch(e){
+        return res.status(401).json({error: "Error in Getting staff allowed things!", e});
+    }
+}
+
+export { AddallowedThings, GetAllowedThings, staffalowedget, UpdateAllowedThings, DeleteAllowedThings };

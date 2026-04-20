@@ -1,12 +1,13 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import ExamPortal from "../components/ExamPortal";
+// import RichTextEditor from "../components/RichTextEditor";
 
 const Home = () => {
   return (
     <div>
-        <Outlet/>
+      <ExamPortal />
+      
     </div>
   )
 }
 
-export default Home
+export default Home;

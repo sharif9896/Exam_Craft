@@ -18,15 +18,15 @@ import { toast } from "react-toastify";
 
 const AdminSyllabusmanage = ({ token }) => {
   // Assuming 'syllabuses' is available in your AppContext
-  const { syllabuses, user } = useAppContext(); 
+  const { syllabusses, user } = useAppContext(); 
   const [selectedSyllabus, setSelectedSyllabus] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (syllabuses && syllabuses.length > 0 && !selectedSyllabus) {
-      setSelectedSyllabus(syllabuses[0]);
+    if (syllabusses && syllabusses.length > 0 && !selectedSyllabus) {
+      setSelectedSyllabus(syllabusses[0]);
     }
-  }, [syllabuses]);
+  }, [syllabusses]);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this syllabus?")) return;
@@ -172,13 +172,13 @@ const AdminSyllabusmanage = ({ token }) => {
         <div className="border border-slate-200 w-full lg:w-1/2 p-5 rounded-2xl bg-white max-h-[500px] overflow-y-auto custom-scrollbar">
           <div className="flex items-center justify-between mb-4 bg-white pb-2 sticky top-0 z-10">
             <h2 className="font-semibold flex items-center gap-2 text-slate-700">
-              <Hash size={18} /> Available Syllabus ({syllabuses?.length || 0})
+              <Hash size={18} /> Available Syllabus ({syllabusses?.length || 0})
             </h2>
           </div>
 
           <div className="flex flex-col gap-3">
             <AnimatePresence>
-              {syllabuses?.map((item, index) => (
+              {syllabusses?.map((item, index) => (
                 <motion.div
                   key={item._id}
                   initial={{ opacity: 0, x: 20 }}
